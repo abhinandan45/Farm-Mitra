@@ -35,3 +35,8 @@ Desktop.ini
 # Render deploy files (optional)
 *.sqlite3
 instance/
+
+.env
+venv/
+__pycache__/
+*.pyc

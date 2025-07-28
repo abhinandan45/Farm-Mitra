@@ -15,7 +15,6 @@ import io
 from dotenv import load_dotenv
 import google.api_core.exceptions
 
-
 load_dotenv()
 
 app = Flask(__name__)
