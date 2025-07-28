@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmMitra - Your Intelligent Farming Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Body and Container Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8f0; /* Light green background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #28a745; /* Green */
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .navbar nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .navbar nav ul li {
+            margin-left: 30px;
+        }
+
+        .navbar nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar nav ul li a:hover,
+        .navbar nav ul li a.active {
+            border-bottom: 2px solid white;
+        }
+
+        .navbar nav ul li a i {
+            margin-right: 8px;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+        }
+
+        .btn-primary {
+            background-color: #28a745; /* Green */
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #218838; /* Darker green */
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0; /* Light grey */
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+        }
+
+        .btn-card {
+            background-color: #28a745; /* Green */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            padding: 8px 15px;
+            margin-top: 15px;
+            font-size: 0.95em;
+        }
+
+        .btn-card:hover {
+            background-color: #218838;
+        }
+
+        .btn-card i {
+            margin-left: 8px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(to right, #e0f2e0, #c8e6c9); /* Gradient light green */
+            text-align: center;
+            padding: 60px 0;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            margin-bottom: 40px;
+        }
+
+        .hero-content h1 {
+            font-size: 3em;
+            color: #28a745; /* Green */
+            margin-bottom: 10px;
+        }
+
+        .hero-content p {
+            font-size: 1.2em;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .hero-icon {
+            font-size: 4em;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .hero-buttons .btn {
+            margin: 0 10px;
+            min-width: 180px;
+        }
+
+        .hero-buttons .btn i {
+            margin-left: 8px;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-stats .stat-item {
+            text-align: center;
+        }
+
+        .hero-stats .stat-item i {
+            font-size: 2.5em;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .hero-stats .stat-item h3 {
+            font-size: 2em;
+            margin: 0;
+            color: #333;
+        }
+
+        .hero-stats .stat-item p {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+
+        /* Tools Section */
+        .tools-section {
+            padding: 60px 0;
+            text-align: center;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .tools-section h2 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .tools-section p {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tool-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tool-cards .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            text-align: left;
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            transition: transform 0.3s ease;
+        }
+
+        .tool-cards .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tool-cards .card-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            padding: 15px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 70px;
+            height: 70px;
+            box-sizing: border-box;
+        }
+
+        /* Specific icon colors from screenshots */
+        .tool-cards .card:nth-child(1) .card-icon { /* Crop Prediction */
+            background-color: #e6ffe6; /* Light green */
+            color: #28a745; /* Green */
+        }
+
+        .tool-cards .card:nth-child(2) .card-icon { /* Disease Detection */
+            background-color: #e6e6ff; /* Light blue */
+            color: #6a5acd; /* Medium purple/blue */
+        }
+
+        .tool-cards .card:nth-child(3) .card-icon { /* AI Assistant */
+            background-color: #ffe6ff; /* Light purple */
+            color: #8a2be2; /* Blue violet */
+        }
+
+
+        .tool-cards .card h3 {
+            font-size: 1.8em;
+            margin-top: 0;
+            color: #333;
+        }
+
+        .tool-cards .card p {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 20px;
+            flex-grow: 1; /* Allows paragraph to take available space */
+            text-align: left; /* Ensure text is left-aligned within card */
+        }
+
+        /* Why Choose FarmMitra Section */
+        .why-choose-section {
+            padding: 60px 0;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .why-choose-section h2 {
+            font-size: 2.5em;
+            color: #333;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .why-choose-section p {
+            font-size: 1.1em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .features-list li {
+            background-color: #e0f2e0; /* Light green background for list items */
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .features-list li i {
+            color: #28a745; /* Green checkmark */
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Call to Action Section (Smart Farming Starts Here) */
+        .cta-section {
+            background: linear-gradient(to right, #28a745, #38c172); /* Green gradient */
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-section .cta-icon {
+            font-size: 4em;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+        }
+
+        .cta-section p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-section .btn {
+            background-color: white;
+            color: #28a745; /* Green */
+            padding: 15px 35px;
+            font-size: 1.1em;
+        }
+
+        .cta-section .btn:hover {
+            background-color: #f0f0f0;
+            color: #218838;
+        }
+
+        /* Transform Farming Section (Ready to Transform) */
+        .transform-section {
+            background-color: #28a745; /* Solid green background */
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .transform-section h2 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .transform-section p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .transform-buttons .btn {
+            margin: 0 10px;
+            min-width: 200px;
+        }
+
+        .transform-buttons .btn-secondary {
+            background-color: white;
+            color: #28a745; /* Green */
+            border: none;
+        }
+
+        .transform-buttons .btn-secondary:hover {
+            background-color: #f0f0f0;
+            color: #218838;
+        }
+
+        /* Footer Styles */
+        .footer {
+            background-color: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i> FarmMitra
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('crop_predict') }}"><i class="fas fa-seedling"></i> Crop Predict</a></li>
+                    <li><a href="{{ url_for('disease_predict') }}"><i class="fas fa-bug"></i> Disease Detect</a></li>
+                    <li><a href="{{ url_for('chat_ai') }}"><i class="fas fa-comments"></i> Chat with AI</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <i class="fas fa-leaf hero-icon"></i>
+                    <h1>Welcome to FarmMitra</h1>
+                    <p>Your intelligent farming companion powered by AI. Get crop predictions, disease detection, and expert advice to maximize your harvest.</p>
+                    <div class="hero-buttons">
+                        <a href="{{ url_for('crop_predict') }}" class="btn btn-primary">Start Predicting <i class="fas fa-arrow-right"></i></a>
+                        <a href="{{ url_for('chat_ai') }}" class="btn btn-secondary">Chat with AI</a>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-users"></i>
+                        <h3>10,000+</h3>
+                        <p>Happy Farmers</p>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-seedling"></i>
+                        <h3>500+</h3>
+                        <p>Crop Varieties</p>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>95%</h3>
+                        <p>Accuracy Rate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tools-section">
+            <div class="container">
+                <h2>Powerful Farming Tools</h2>
+                <p>Discover our suite of AI-powered tools designed to help you make better farming decisions</p>
+                <div class="tool-cards">
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-seedling"></i></div>
+                        <h3>Crop Prediction</h3>
+                        <p>Get intelligent recommendations for the best crops to grow based on soil conditions, weather, and market trends.</p>
+                        <a href="{{ url_for('crop_predict') }}" class="btn btn-card">Get Started <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-brain"></i></div>
+                        <h3>Disease Detection</h3>
+                        <p>Upload photos of your crops to identify diseases early and get treatment recommendations.</p>
+                        <a href="{{ url_for('disease_predict') }}" class="btn btn-card">Get Started <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon"><i class="fas fa-comment-dots"></i></div>
+                        <h3>AI Assistant</h3>
+                        <p>Chat with our AI farming expert for personalized advice, tips, and solutions to your farming challenges.</p>
+                        <a href="{{ url_for('chat_ai') }}" class="btn btn-card">Get Started <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="why-choose-section">
+            <div class="container">
+                <h2>Why Choose FarmMitra?</h2>
+                <p>Join thousands of farmers who have transformed their agriculture with our AI-powered platform.</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Increase crop yield by up to 30%</li>
+                    <li><i class="fas fa-check-circle"></i> Early disease detection saves costs</li>
+                    <li><i class="fas fa-check-circle"></i> 24/7 AI farming assistance</li>
+                    <li><i class="fas fa-check-circle"></i> Weather-based recommendations</li>
+                    <li><i class="fas fa-check-circle"></i> Market price predictions</li>
+                    <li><i class="fas fa-check-circle"></i> Soil health monitoring</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <i class="fas fa-leaf cta-icon"></i>
+                    <h2>Smart Farming Starts Here</h2>
+                    <p>Experience the future of agriculture with our comprehensive AI tools</p>
+                    <a href="{{ url_for('crop_predict') }}" class="btn btn-primary">Start Your Journey</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="transform-section">
+            <div class="container">
+                <h2>Ready to Transform Your Farming?</h2>
+                <p>Start using FarmMitra today and see the difference AI can make in your agricultural success.</p>
+                <div class="transform-buttons">
+                    <a href="{{ url_for('crop_predict') }}" class="btn btn-primary">Start Crop Prediction</a>
+                    <a href="{{ url_for('disease_predict') }}" class="btn btn-secondary">Disease Detection</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 FarmMitra. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

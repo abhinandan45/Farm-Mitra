@@ -1,0 +1,37 @@
+# Ignore virtual environments
+venv/
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# macOS and Linux hidden files
+.DS_Store
+Thumbs.db
+
+# VS Code config
+.vscode/
+
+# Log files
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment & secret keys
+.env
+*.env
+
+# OS-generated files
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Pytest cache
+.pytest_cache/
+
+# Render deploy files (optional)
+*.sqlite3
+instance/

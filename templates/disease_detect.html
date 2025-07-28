@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Detection - FarmMitra</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Basic Styling - You likely have this in style.css, but including for completeness */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #2e7d32; /* Darker green */
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar .logo i {
+            font-size: 24px;
+        }
+
+        .navbar nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 30px;
+        }
+
+        .navbar nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 5px 0;
+            position: relative;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar nav ul li a:hover,
+        .navbar nav ul li a.active {
+            color: #c8e6c9; /* Lighter green on hover/active */
+        }
+
+        .navbar nav ul li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #c8e6c9;
+        }
+
+        main {
+            padding: 30px 0;
+            min-height: calc(100vh - 180px); /* Adjust based on header/footer height */
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(to right, #4caf50, #81c784); /* Green gradient */
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .page-header .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: bounceIn 1s ease-out;
+        }
+
+        .page-header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .page-header p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .upload-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 800px;
+            margin: 30px auto;
+            text-align: center;
+        }
+
+        .error-message {
+            background-color: #ffe0e0;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            justify-content: center;
+        }
+
+        .upload-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .upload-header i {
+            font-size: 35px;
+            color: #4caf50;
+        }
+
+        .upload-header h2 {
+            font-size: 28px;
+            margin: 0;
+            color: #333;
+        }
+
+        .upload-header p {
+            margin: 0;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .drop-area {
+            border: 3px dashed #a5d6a7; /* Light green dashed border */
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            overflow: hidden; /* Important for image preview */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+            background-color: #f9fdf9;
+        }
+
+        .drop-area:hover,
+        .drop-area.hover {
+            background-color: #e8f5e9; /* Lighter green on hover */
+            border-color: #4caf50;
+        }
+
+        .drop-area input[type="file"] {
+            display: none; /* Hide the actual input */
+        }
+
+        .drop-area i.fas.fa-cloud-upload-alt {
+            font-size: 70px;
+            color: #81c784;
+            margin-bottom: 15px;
+        }
+
+        .drop-area p {
+            margin: 5px 0;
+            font-size: 20px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .drop-area small {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .drop-area .image-preview {
+            max-width: 100%;
+            max-height: 200px; /* Limit height of preview */
+            border-radius: 8px;
+            object-fit: contain; /* Ensure image fits well */
+            margin-bottom: 15px;
+        }
+
+        .drop-area .change-image-btn {
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .drop-area .change-image-btn:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
+
+        /* Styling when image is present */
+        .drop-area-with-image {
+            border: 2px solid #4caf50; /* Solid green border */
+            background-color: #ffffff; /* White background */
+        }
+
+        .drop-area-with-image i,
+        .drop-area-with-image p,
+        .drop-area-with-image small {
+            display: none; /* Hide default upload text */
+        }
+
+
+        .tips-section {
+            background-color: #e8f5e9; /* Very light green */
+            border: 1px solid #c8e6c9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+
+        .tips-section h3 {
+            color: #2e7d32;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+        }
+
+        .tips-section ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .tips-section ul li {
+            margin-bottom: 10px;
+            color: #444;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .tips-section ul li i {
+            color: #4caf50;
+            margin-top: 3px;
+        }
+
+        .analyze-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            margin-top: 30px;
+            width: 100%;
+            max-width: 300px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .analyze-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .result-section, .ready-to-analyze-section {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .ready-to-analyze-section .icon {
+            font-size: 60px;
+            color: #81c784;
+            margin-bottom: 20px;
+        }
+
+        .ready-to-analyze-section h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .ready-to-analyze-section p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .disease-identified-box, .treatment-recommendations-box, .error-result-box {
+            background-color: #f0f7f4; /* Lighter background for boxes */
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            text-align: left;
+            border-left: 6px solid #4CAF50; /* Green left border */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .error-result-box {
+            background-color: #ffeeee;
+            border-left-color: #ff4d4d;
+            color: #ff4d4d;
+        }
+        .error-result-box h3 {
+            color: #ff4d4d !important;
+        }
+
+
+        .disease-identified-box h3, .treatment-recommendations-box h3 {
+            color: #2e7d32;
+            font-size: 26px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .disease-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping for long names */
+            gap: 15px;
+        }
+
+        .confidence-tag {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: normal;
+        }
+
+        .severity-tag {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .severity-tag span {
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .severity-tag .high { background-color: #ff4d4d; color: white; } /* Red */
+        .severity-tag .medium { background-color: #ffc107; color: #333; } /* Amber */
+        .severity-tag .low { background-color: #81c784; color: white; } /* Light Green */
+        .severity-tag .unknown { background-color: #bdbdbd; color: white; } /* Gray */
+
+
+        .disease-description {
+            font-size: 17px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        .symptoms-list h4,
+        .treatment-recommendations-box h4 {
+            color: #4CAF50;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .symptoms-list ul,
+        .prevention-list ul,
+        .action-list ol {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .symptoms-list ul li,
+        .prevention-list ul li,
+        .action-list ol li {
+            background-color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            font-size: 16px;
+            color: #555;
+        }
+
+        .symptoms-list ul li i,
+        .prevention-list ul li i,
+        .action-list ol li i {
+            color: #4CAF50;
+            margin-top: 3px;
+        }
+
+        .action-list ol li {
+            counter-increment: custom-counter;
+        }
+
+        .action-list ol li::before {
+            content: counter(custom-counter) ".";
+            font-weight: bold;
+            color: #4CAF50;
+            margin-right: 5px;
+        }
+
+        .treatment-recommendations-box p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 15px;
+        }
+        
+        .footer {
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        /* Animations */
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i> FarmMitra
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('crop_predict') }}"><i class="fas fa-seedling"></i> Crop Predict</a></li>
+                    <li><a href="{{ url_for('disease_predict') }}" class="active"><i class="fas fa-bug"></i> Disease Detect</a></li>
+                    <li><a href="{{ url_for('chat_ai') }}"><i class="fas fa-comments"></i> Chat with AI</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <i class="fas fa-brain icon"></i>
+                <h1>Disease Detection</h1>
+                <p>Upload a photo of your crop to get instant AI-powered disease identification and treatment recommendations</p>
+            </div>
+        </section>
+
+        <section class="upload-section">
+            {% if error_message and not image_url %} {# Show error only if no image was previously uploaded/displayed #}
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i> {{ error_message }}
+            </div>
+            {% endif %}
+
+            <div class="upload-header">
+                <i class="fas fa-camera"></i>
+                <div>
+                    <h2>Upload Crop Image</h2>
+                    <p>Take a clear photo of the affected plant part for accurate diagnosis</p>
+                </div>
+            </div>
+
+            <form action="{{ url_for('disease_predict') }}" method="POST" enctype="multipart/form-data">
+                <label for="imageUpload" class="drop-area {% if image_url %}drop-area-with-image{% endif %}" id="dropArea">
+                    <input type="file" id="imageUpload" name="imageUpload" accept="image/jpeg, image/png" {% if not image_url %}required{% endif %}>
+                    
+                    <div id="dropAreaContent">
+                        {% if image_url %}
+                            <img src="{{ image_url }}" alt="Uploaded Crop Image" class="image-preview">
+                            <button type="button" class="change-image-btn"><i class="fas fa-cloud-upload-alt"></i> Change Image</button>
+                        {% else %}
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Upload Image</p>
+                            <p>Click to upload or drag and drop your crop image here</p>
+                            <small>Supports JPG, PNG up to 10MB</small>
+                        {% endif %}
+                    </div>
+                </label>
+
+                <div class="tips-section">
+                    <h3><i class="fas fa-lightbulb"></i> Tips for Better Results:</h3>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Take photos in good lighting conditions</li>
+                        <li><i class="fas fa-check-circle"></i> Focus on the affected area clearly</li>
+                        <li><i class="fas fa-check-circle"></i> Include leaves, stems, or fruits showing symptoms</li>
+                        <li><i class="fas fa-check-circle"></i> Avoid blurry or dark images</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="analyze-btn"><i class="fas fa-vial"></i> Analyze Disease</button>
+            </form>
+        </section>
+
+        {% if disease_identified or (error_message and image_url) %}
+        <section class="result-section">
+            {% if disease_identified %}
+            <div class="disease-identified-box">
+                <h3><i class="fas fa-exclamation-triangle"></i> Disease Identified</h3>
+                <div class="disease-name">
+                    {{ disease_identified }}
+                    {% if confidence %}
+                    <span class="confidence-tag">Confidence: {{ confidence }}%</span>
+                    {% endif %}
+                </div>
+                {% if severity %}
+                <p class="severity-tag">Severity: <span class="{{ severity|lower }}">{{ severity }}</span></p>
+                {% endif %}
+                {% if description %}
+                <p class="disease-description">{{ description }}</p>
+                {% endif %}
+
+                {% if common_symptoms and common_symptoms|length > 0 %}
+                <div class="symptoms-list">
+                    <h4><i class="fas fa-list"></i> Common Symptoms:</h4>
+                    <ul>
+                        {% for symptom in common_symptoms %}
+                        <li><i class="fas fa-circle"></i> {{ symptom }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if immediate_actions or prevention_tips or solution_dawai or solution_fertilizer or solution_general_advice %}
+            <div class="treatment-recommendations-box">
+                <h3><i class="fas fa-shield-alt"></i> Treatment Recommendations</h3>
+                
+                {% if immediate_actions and immediate_actions|length > 0 %}
+                <h4><i class="fas fa-fire"></i> Immediate Actions:</h4>
+                <div class="action-list">
+                    <ol>
+                        {% for action in immediate_actions %}
+                        <li>{{ action }}</li>
+                        {% endfor %}
+                    </ol>
+                </div>
+                {% endif %}
+
+                {% if prevention_tips and prevention_tips|length > 0 %}
+                <h4><i class="fas fa-lightbulb"></i> Prevention Tips:</h4>
+                <div class="prevention-list">
+                    <ul>
+                        {% for tip in prevention_tips %}
+                        <li><i class="fas fa-check-circle"></i> {{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                {% if solution_dawai %}
+                <h4><i class="fas fa-prescription-bottle-alt"></i> Dawai (Medicine/Pesticide):</h4>
+                <p>{{ solution_dawai }}</p>
+                {% endif %}
+                
+                {% if solution_fertilizer %}
+                <h4><i class="fas fa-flask"></i> Fertilizer Recommendation:</h4>
+                <p>{{ solution_fertilizer }}</p>
+                {% endif %}
+                
+                {% if solution_general_advice %}
+                <h4><i class="fas fa-hand-holding-heart"></i> General Advice:</h4>
+                <p>{{ solution_general_advice }}</p>
+                {% endif %}
+            </div>
+            {% endif %} {# End of {% if immediate_actions ... %} #}
+
+            {% elif error_message and image_url %} {# This elif is for an error *after* an image was uploaded #}
+            <div class="error-result-box">
+                <h3><i class="fas fa-exclamation-circle"></i> Analysis Error</h3>
+                <p>{{ error_message }}</p>
+                <p>Please try again with a different image or check the image quality.</p>
+            </div>
+            {% endif %} {# End of {% if disease_identified %} or {% elif error_message ... %} #}
+
+        </section>
+        {% else %} {# This is the "else" for the very first `if disease_identified or (error_message and image_url)` #}
+        <section class="ready-to-analyze-section">
+            <i class="fas fa-brain icon"></i>
+            <h2>Ready to Analyze?</h2>
+            <p>Upload an image of your crop to get instant disease detection and treatment recommendations</p>
+        </section>
+        {% endif %} {# End of the very first `if` statement for results/ready to analyze sections #}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 FarmMitra. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const dropArea = document.getElementById('dropArea');
+        const dropAreaContent = document.getElementById('dropAreaContent');
+
+        function renderDropAreaContent(file) {
+            let contentHTML = '';
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    contentHTML = `
+                        <img src="${e.target.result}" alt="Uploaded Crop Image" class="image-preview">
+                        <button type="button" class="change-image-btn"><i class="fas fa-cloud-upload-alt"></i> Change Image</button>
+                    `;
+                    dropAreaContent.innerHTML = contentHTML;
+                    dropArea.classList.add('drop-area-with-image');
+                    // Re-attach event listener to the new change button
+                    // Use a timeout to ensure the button is in the DOM before attaching listener
+                    setTimeout(() => {
+                        const newChangeBtn = dropAreaContent.querySelector('.change-image-btn');
+                        if (newChangeBtn) {
+                            newChangeBtn.addEventListener('click', () => imageUpload.click());
+                        }
+                    }, 0);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                contentHTML = `
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Upload Image</p>
+                    <p>Click to upload or drag and drop your crop image here</p>
+                    <small>Supports JPG, PNG up to 10MB</small>
+                `;
+                dropAreaContent.innerHTML = contentHTML;
+                dropArea.classList.remove('drop-area-with-image');
+                imageUpload.value = ''; // Clear the file input's value
+            }
+        }
+
+        // Initial setup for existing image or no image
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const imageUrlFromServer = "{{ image_url if image_url else '' }}";
+            if (imageUrlFromServer) {
+                // If there's an image from server, set the visual content
+                dropAreaContent.innerHTML = `
+                    <img src="${imageUrlFromServer}" alt="Uploaded Crop Image" class="image-preview">
+                    <button type="button" class="change-image-btn"><i class="fas fa-cloud-upload-alt"></i> Change Image</button>
+                `;
+                dropArea.classList.add('drop-area-with-image');
+                // Attach event listener for the 'Change Image' button
+                 setTimeout(() => {
+                    const newChangeBtn = dropAreaContent.querySelector('.change-image-btn');
+                    if (newChangeBtn) {
+                        newChangeBtn.addEventListener('click', () => imageUpload.click());
+                    }
+                }, 0);
+            } else {
+                // Initial state if no image is present from server
+                renderDropAreaContent(null); // Render the default upload state
+            }
+
+            // Ensure the main imageUpload listener is always active
+            imageUpload.addEventListener('change', function() {
+                renderDropAreaContent(this.files[0]);
+            });
+        });
+
+        // Drag and Drop functionality
+        dropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropArea.classList.add('hover');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('hover');
+        });
+
+        dropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropArea.classList.remove('hover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                imageUpload.files = files; // Assign files to the actual input
+                renderDropAreaContent(files[0]);
+            }
+        });
+    </script>
+</body>
+</html>

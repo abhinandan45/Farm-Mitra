@@ -1,0 +1,1202 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmMitra - Chat with AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Body and Container Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8f0; /* Light green background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Navbar Styles (reused for consistency) */
+        .navbar {
+            background-color: #28a745; /* Green */
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .navbar nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .navbar nav ul li {
+            margin-left: 30px;
+        }
+
+        .navbar nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar nav ul li a:hover,
+        .navbar nav ul li a.active {
+            border-bottom: 2px solid white;
+        }
+
+        .navbar nav ul li a i {
+            margin-right: 8px;
+        }
+
+        /* Page Specific Styles */
+        .page-header {
+            background: linear-gradient(to right, #e0f2e0, #c8e6c9); /* Light green gradient */
+            text-align: center;
+            padding: 40px 0;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-header .icon {
+            font-size: 4em;
+            color: #8a2be2; /* Blue violet as per screenshot */
+            margin-bottom: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 2.8em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            font-size: 1.1em;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .chat-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 900px;
+            margin: 0 auto 40px;
+            display: flex;
+            flex-direction: column;
+            height: 70vh; /* Adjust height as needed */
+            min-height: 500px;
+        }
+
+        .chat-header {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            padding: 15px 20px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header i {
+            font-size: 1.5em;
+            color: #8a2be2; /* Blue violet */
+            margin-right: 15px;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.4em;
+            color: #333;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            max-width: 80%;
+        }
+
+        .message.user {
+            margin-left: auto;
+            justify-content: flex-end;
+            text-align: right;
+        }
+
+        .message.bot {
+            margin-right: auto;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-right: 10px;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        .message.user .message-avatar {
+            margin-right: 0;
+            margin-left: 10px;
+            background-color: #d0e0ff; /* Light blue for user */
+            color: #0056b3;
+        }
+
+        .message.bot .message-avatar {
+            background-color: #ffe6ff; /* Light purple for bot */
+            color: #8a2be2;
+        }
+
+        .message-content {
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: calc(100% - 60px); /* Account for avatar */
+            word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user .message-content {
+            background-color: #28a745; /* Green for user messages */
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot .message-content {
+            background-color: #f0f0f0; /* Light grey for bot messages */
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-timestamp {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 5px;
+        }
+        .message.user .message-timestamp {
+            text-align: right;
+            padding-right: 10px; /* Align with message bubble */
+        }
+        .message.bot .message-timestamp {
+            text-align: left;
+            padding-left: 10px; /* Align with message bubble */
+        }
+
+
+        .chat-input {
+            border-top: 1px solid #eee;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            background-color: #f8f8f8;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .chat-input input[type="text"] {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 1em;
+            margin-right: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input input[type="text"]:focus {
+            border-color: #8a2be2; /* Blue violet on focus */
+        }
+
+        .chat-input button {
+            background-color: #8a2be2; /* Blue violet */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            background-color: #7c24d1; /* Darker blue violet */
+        }
+
+        /* Initial content sections (Quick Questions & What I Can Help You With) */
+        .initial-content {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 40px;
+        }
+
+        .initial-content h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .initial-content h3 {
+            font-size: 1.5em;
+            color: #555;
+            margin-bottom: 20px;
+            margin-top: 40px;
+        }
+
+        .quick-questions-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        @media (min-width: 600px) {
+            .quick-questions-list {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+
+        .quick-questions-list li button {
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px 20px;
+            width: 100%;
+            text-align: left;
+            font-size: 1em;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .quick-questions-list li button:hover {
+            background-color: #e0e0e0;
+            border-color: #ccc;
+        }
+
+        .quick-questions-list li button i {
+            margin-right: 15px;
+            color: #8a2be2; /* Blue violet */
+        }
+
+        .what-i-can-help-with-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        @media (min-width: 600px) {
+            .what-i-can-help-with-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .help-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f8f8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .help-item i {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .help-item h4 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .help-item p {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        /* Specific icon colors */
+        .help-item:nth-child(1) i { color: #28a745; } /* Crop Selection - Green */
+        .help-item:nth-child(2) i { color: #007bff; } /* Irrigation - Blue */
+        .help-item:nth-child(3) i { color: #ffc107; } /* Weather Guidance - Yellow/Orange */
+        .help-item:nth-child(4) i { color: #6a5acd; } /* General Advice - Blue violet */
+
+
+        /* Footer Styles (reused) */
+        .footer {
+            background-color: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i> FarmMitra
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('crop_predict') }}"><i class="fas fa-seedling"></i> Crop Predict</a></li>
+                    <li><a href="{{ url_for('disease_predict') }}"><i class="fas fa-bug"></i> Disease Detect</a></li>
+                    <li><a href="{{ url_for('chat_ai') }}" class="active"><i class="fas fa-comments"></i> Chat with AI</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <i class="fas fa-comments icon"></i>
+                <h1>Chat with AI Assistant</h1>
+                <p>Get instant expert advice on farming, crops, and agricultural best practices</p>
+            </div>
+        </section>
+
+        <section class="chat-container">
+            <div class="chat-header">
+                <i class="fas fa-robot"></i>
+                <h2>FarmMitra AI Assistant</h2>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                </div>
+            <div class="chat-input">
+                <input type="text" id="userMessage" placeholder="Ask me anything about farming..." autofocus>
+                <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </section>
+
+        <section class="initial-content">
+            <div class="container">
+                <h2>Explore Farming Knowledge</h2>
+
+                <h3>Quick Questions</h3>
+                <ul class="quick-questions-list">
+                    <li><button data-question="Best crops for my region"><i class="fas fa-leaf"></i> Best crops for my region</button></li>
+                    <li><button data-question="Irrigation scheduling tips"><i class="fas fa-tint"></i> Irrigation scheduling tips</button></li>
+                    <li><button data-question="Weather impact on farming"><i class="fas fa-sun"></i> Weather impact on farming</button></li>
+                    <li><button data-question="Organic farming methods"><i class="fas fa-seedling"></i> Organic farming methods</button></li>
+                </ul>
+
+                <h3>What I Can Help You With</h3>
+                <div class="what-i-can-help-with-grid">
+                    <div class="help-item">
+                        <i class="fas fa-leaf"></i>
+                        <h4>Crop Selection</h4>
+                        <p>Best crops for your region and soil</p>
+                    </div>
+                    <div class="help-item">
+                        <i class="fas fa-tint"></i>
+                        <h4>Irrigation</h4>
+                        <p>Water management and scheduling</p>
+                    </div>
+                    <div class="help-item">
+                        <i class="fas fa-sun"></i>
+                        <h4>Weather Guidance</h4>
+                        <p>Weather-based farming decisions</p>
+                    </div>
+                    <div class="help-item">
+                        <i class="fas fa-toolbox"></i>
+                        <h4>General Advice</h4>
+                        <p>Pest control, fertilizers, and more</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 FarmMitra. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const userMessageInput = document.getElementById('userMessage');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const quickQuestionButtons = document.querySelectorAll('.quick-questions-list button');
+
+        // Function to add a message to the chat display
+        function addMessage(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('message-avatar');
+            avatarDiv.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+
+            const messageBubble = document.createElement('div');
+            messageBubble.classList.add('message-bubble');
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('message-content');
+            contentDiv.textContent = message;
+
+            const timestampDiv = document.createElement('div');
+            timestampDiv.classList.add('message-timestamp');
+            // Use Moment.js here on the client side
+            timestampDiv.textContent = moment().format('hh:mm A');
+
+            messageBubble.appendChild(contentDiv);
+            messageBubble.appendChild(timestampDiv);
+
+            if (sender === 'user') {
+                messageDiv.appendChild(messageBubble);
+                messageDiv.appendChild(avatarDiv);
+            } else {
+                messageDiv.appendChild(avatarDiv);
+                messageDiv.appendChild(messageBubble);
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        }
+
+        // Add the initial bot message when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            addMessage('bot', "Hello! I'm your AI farming assistant. I can help you with crop advice, weather guidance, pest management, and more. What would you like to know?");
+        });
+
+
+        // Function to send message to backend
+        async function sendMessage() {
+            const userMessage = userMessageInput.value.trim();
+            if (!userMessage) return;
+
+            addMessage('user', userMessage);
+            userMessageInput.value = ''; // Clear input
+
+            try {
+                // The URL is now simply '/chat' as defined in app.py
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                addMessage('bot', data.response);
+            } catch (error) {
+                console.error('Error sending message:', error);
+                addMessage('bot', 'Sorry, I am unable to respond at the moment. Please try again later.');
+            }
+        }
+
+        // Event listener for send button click
+        sendMessageBtn.addEventListener('click', sendMessage);
+
+        // Event listener for Enter key press in input field
+        userMessageInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Event listeners for quick question buttons
+        quickQuestionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const question = this.dataset.question;
+                userMessageInput.value = question; // Populate input
+                sendMessage(); // Send message
+            });
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmMitra - Chat with AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Body and Container Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8f0; /* Light green background */
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Navbar Styles (reused for consistency) */
+        .navbar {
+            background-color: #28a745; /* Green */
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .navbar nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        .navbar nav ul li {
+            margin-left: 30px;
+        }
+
+        .navbar nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            padding: 5px 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar nav ul li a:hover,
+        .navbar nav ul li a.active {
+            border-bottom: 2px solid white;
+        }
+
+        .navbar nav ul li a i {
+            margin-right: 8px;
+        }
+
+        /* Page Specific Styles */
+        .page-header {
+            background: linear-gradient(to right, #e0f2e0, #c8e6c9); /* Light green gradient */
+            text-align: center;
+            padding: 40px 0;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-header .icon {
+            font-size: 4em;
+            color: #8a2be2; /* Blue violet as per screenshot */
+            margin-bottom: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 2.8em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            font-size: 1.1em;
+            color: #555;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .chat-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 900px;
+            margin: 0 auto 40px;
+            display: flex;
+            flex-direction: column;
+            height: 70vh; /* Adjust height as needed */
+            min-height: 500px;
+        }
+
+        .chat-header {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            padding: 15px 20px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-header i {
+            font-size: 1.5em;
+            color: #8a2be2; /* Blue violet */
+            margin-right: 15px;
+        }
+
+        .chat-header h2 {
+            margin: 0;
+            font-size: 1.4em;
+            color: #333;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            align-items: flex-start;
+            /* max-width on the message itself might make it too wide.
+               Better to control max-width on the bubble wrapper. */
+            /* max-width: 80%; */
+        }
+
+        .message.user {
+            margin-left: auto;
+            justify-content: flex-end; /* Aligns content to the right */
+            text-align: right;
+        }
+
+        .message.bot {
+            margin-right: auto;
+            justify-content: flex-start; /* Aligns content to the left */
+            text-align: left;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-right: 10px; /* Space between avatar and bubble for bot */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        .message.user .message-avatar {
+            margin-right: 0;
+            margin-left: 10px; /* Space between bubble and avatar for user */
+            background-color: #d0e0ff; /* Light blue for user */
+            color: #0056b3;
+        }
+
+        .message.bot .message-avatar {
+            background-color: #ffe6ff; /* Light purple for bot */
+            color: #8a2be2;
+        }
+
+        /* This is the wrapper for content and timestamp */
+        .message-bubble-wrapper {
+            display: flex;
+            flex-direction: column; /* Stacks content and timestamp vertically */
+            max-width: calc(100% - 60px); /* Account for avatar width + margin */
+        }
+
+        .message-content {
+            padding: 12px 18px;
+            border-radius: 20px;
+            word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user .message-content {
+            background-color: #28a745; /* Green for user messages */
+            color: white;
+            border-bottom-right-radius: 5px; /* Aesthetic touch */
+        }
+
+        .message.bot .message-content {
+            background-color: #f0f0f0; /* Light grey for bot messages */
+            color: #333;
+            border-bottom-left-radius: 5px; /* Aesthetic touch */
+        }
+
+        .message-timestamp {
+            font-size: 0.75em;
+            color: #999;
+            margin-top: 5px;
+        }
+        .message.user .message-timestamp {
+            text-align: right; /* Aligns timestamp right within user bubble */
+        }
+        .message.bot .message-timestamp {
+            text-align: left; /* Aligns timestamp left within bot bubble */
+        }
+
+
+        .chat-input {
+            border-top: 1px solid #eee;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            background-color: #f8f8f8;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .chat-input input[type="text"] {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 1em;
+            margin-right: 10px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input input[type="text"]:focus {
+            border-color: #8a2be2; /* Blue violet on focus */
+        }
+
+        .chat-input button {
+            background-color: #8a2be2; /* Blue violet */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.2em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            background-color: #7c24d1; /* Darker blue violet */
+        }
+
+        /* Initial content sections (Quick Questions & What I Can Help You With) */
+        .initial-content {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 40px;
+        }
+
+        .initial-content h2 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .initial-content h3 {
+            font-size: 1.5em;
+            color: #555;
+            margin-bottom: 20px;
+            margin-top: 40px;
+        }
+
+        .quick-questions-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        @media (min-width: 600px) {
+            .quick-questions-list {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+
+        .quick-questions-list li button {
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px 20px;
+            width: 100%;
+            text-align: left;
+            font-size: 1em;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .quick-questions-list li button:hover {
+            background-color: #e0e0e0;
+            border-color: #ccc;
+        }
+
+        .quick-questions-list li button i {
+            margin-right: 15px;
+            color: #8a2be2; /* Blue violet */
+        }
+
+        .what-i-can-help-with-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        @media (min-width: 600px) {
+            .what-i-can-help-with-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .help-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f8f8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .help-item i {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .help-item h4 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .help-item p {
+            font-size: 0.9em;
+            color: #777;
+        }
+
+        /* Specific icon colors */
+        .help-item:nth-child(1) i { color: #28a745; } /* Crop Selection - Green */
+        .help-item:nth-child(2) i { color: #007bff; } /* Irrigation - Blue */
+        .help-item:nth-child(3) i { color: #ffc107; } /* Weather Guidance - Yellow/Orange */
+        .help-item:nth-child(4) i { color: #6a5acd; } /* General Advice - Blue violet */
+
+
+        /* Footer Styles (reused) */
+        .footer {
+            background-color: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 0.9em;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i> FarmMitra
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="{{ url_for('crop_predict') }}"><i class="fas fa-seedling"></i> Crop Predict</a></li>
+                    <li><a href="{{ url_for('disease_predict') }}"><i class="fas fa-bug"></i> Disease Detect</a></li>
+                    <li><a href="{{ url_for('chat_ai') }}" class="active"><i class="fas fa-comments"></i> Chat with AI</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <i class="fas fa-comments icon"></i>
+                <h1>Chat with AI Assistant</h1>
+                <p>Get instant expert advice on farming, crops, and agricultural best practices</p>
+            </div>
+        </section>
+
+        <section class="chat-container">
+            <div class="chat-header">
+                <i class="fas fa-robot"></i>
+                <h2>FarmMitra AI Assistant</h2>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                </div>
+            <div class="chat-input">
+                <input type="text" id="userMessage" placeholder="Ask me anything about farming..." autofocus>
+                <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </section>
+
+        <section class="initial-content">
+            <div class="container">
+                <h2>Explore Farming Knowledge</h2>
+
+                <h3>Quick Questions</h3>
+                <ul class="quick-questions-list">
+                    <li><button data-question="Best crops for my region"><i class="fas fa-leaf"></i> Best crops for my region</button></li>
+                    <li><button data-question="Irrigation scheduling tips"><i class="fas fa-tint"></i> Irrigation scheduling tips</button></li>
+                    <li><button data-question="Weather impact on farming"><i class="fas fa-sun"></i> Weather impact on farming</button></li>
+                    <li><button data-question="Organic farming methods"><i class="fas fa-seedling"></i> Organic farming methods</button></li>
+                </ul>
+
+                <h3>What I Can Help You With</h3>
+                <div class="what-i-can-help-with-grid">
+                    <div class="help-item">
+                        <i class="fas fa-leaf"></i>
+                        <h4>Crop Selection</h4>
+                        <p>Best crops for your region and soil</p>
+                    </div>
+                    <div class="help-item">
+                        <i class="fas fa-tint"></i>
+                        <h4>Irrigation</h4>
+                        <p>Water management and scheduling</p>
+                    </div>
+                    <div class="help-item">
+                        <i class="fas fa-sun"></i>
+                        <h4>Weather Guidance</h4>
+                        <p>Weather-based farming decisions</p>
+                    </div>
+                    <div class="help-item">
+                        <i class="fas fa-toolbox"></i>
+                        <h4>General Advice</h4>
+                        <p>Pest control, fertilizers, and more</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 FarmMitra. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const userMessageInput = document.getElementById('userMessage');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const quickQuestionButtons = document.querySelectorAll('.quick-questions-list button');
+        const initialContentSection = document.querySelector('.initial-content'); // Get the initial content section
+
+        // Function to add a message to the chat display
+        function addMessage(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('message-avatar');
+            avatarDiv.innerHTML = sender === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+
+            // IMPORTANT: Re-introducing message-bubble-wrapper for correct timestamp positioning
+            const messageBubbleWrapper = document.createElement('div');
+            messageBubbleWrapper.classList.add('message-bubble-wrapper');
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('message-content');
+            contentDiv.textContent = message;
+
+            const timestampDiv = document.createElement('div');
+            timestampDiv.classList.add('message-timestamp');
+            timestampDiv.textContent = moment().format('hh:mm A'); // Use Moment.js for time
+
+            // Append content and timestamp to the wrapper
+            messageBubbleWrapper.appendChild(contentDiv);
+            messageBubbleWrapper.appendChild(timestampDiv);
+
+            // Append avatar and wrapper to the main message div based on sender
+            if (sender === 'user') {
+                messageDiv.appendChild(messageBubbleWrapper);
+                messageDiv.appendChild(avatarDiv);
+            } else {
+                messageDiv.appendChild(avatarDiv);
+                messageDiv.appendChild(messageBubbleWrapper);
+            }
+
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        }
+
+        // Add the initial bot message when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            addMessage('bot', "Hello! I'm your AI farming assistant. I can help you with crop advice, weather guidance, pest management, and more. What would you like to know?");
+        });
+
+
+        // Function to send message to backend
+        async function sendMessage() {
+            const userMessage = userMessageInput.value.trim();
+            if (!userMessage) return;
+
+            addMessage('user', userMessage);
+            userMessageInput.value = ''; // Clear input
+
+            // Hide initial content section if it's visible and a message is sent
+            if (initialContentSection && initialContentSection.style.display !== 'none') {
+                initialContentSection.style.display = 'none'; 
+                // Consider adding a class for a smoother transition/fade-out in CSS
+            }
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                });
+
+                if (!response.ok) {
+                    // Check if response has JSON data for a more specific error
+                    const errorData = await response.json().catch(() => ({})); 
+                    const errorMessage = errorData.response || `HTTP error! status: ${response.status}`;
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                addMessage('bot', data.response);
+            } catch (error) {
+                console.error('Error sending message:', error);
+                // The error message from the Flask backend (if it provides one) will be caught here.
+                // For a more user-friendly message, you might display 'error.message'
+                addMessage('bot', `Sorry, I am currently unable to provide a response. Error: ${error.message}. Please try again later.`);
+            }
+        }
+
+        // Event listener for send button click
+        sendMessageBtn.addEventListener('click', sendMessage);
+
+        // Event listener for Enter key press in input field
+        userMessageInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Event listeners for quick question buttons
+        quickQuestionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const question = this.dataset.question;
+                userMessageInput.value = question; // Populate input
+                sendMessage(); // Send message
+            });
+        });
+    </script>
+</body>
+</html>
